@@ -1,10 +1,24 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import News from "./News";
+import FeedSuggestion from "./FeedSuggestion";
+import Follow from "./Follow";
+import { useState } from "react";
 
-export default function Widgets({ newsResults, articleNum, setArticleNum }) {
+export default function Widgets({
+  followResult,
+  newsResults,
+  articleNum,
+  setArticleNum,
+}) {
+  const [randomUserNumber, setRandomUserNumber] = useState(3);
   function handleNewsResultsNum() {
     if (articleNum < newsResults.length) {
       setArticleNum((prev) => prev + 3);
+    }
+  }
+  function handleRandomUserNum() {
+    if (randomUserNumber < followResult.length) {
+      setRandomUserNumber((prev) => prev + 3);
     }
   }
   return (
@@ -20,18 +34,24 @@ export default function Widgets({ newsResults, articleNum, setArticleNum }) {
         </div>
       </div>
 
-      <div className="space-y-3 text-gray-700 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[75%]">
-        <h4 className="px-4 text-lg font-bold ">What's Happening</h4>
+      <FeedSuggestion
+        name={"Whats Happening"}
+        handleShowMore={handleNewsResultsNum}
+      >
         {newsResults.slice(0, articleNum).map((news) => (
           <News key={news.title} {...news} />
         ))}
-        <button
-          onClick={handleNewsResultsNum}
-          className="pb-3 pl-4 text-blue-300 hover:text-blue-400"
-        >
-          Show More
-        </button>
-      </div>
+      </FeedSuggestion>
+
+      <FeedSuggestion
+        type="randomUser"
+        name={"Who to Follow"}
+        handleShowMore={handleRandomUserNum}
+      >
+        {followResult.slice(0, randomUserNumber).map((follow) => (
+          <Follow key={follow.login.username} {...follow} />
+        ))}
+      </FeedSuggestion>
     </div>
   );
 }

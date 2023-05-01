@@ -6,7 +6,7 @@ import { useState } from "react";
 
 
 
-export default function Home({newsResults:{articles}}) {
+export default function Home({newsResults:{articles},followResult}) {
   const [articleNum,setArticleNum] =useState(3);
   return (
     <div>
@@ -23,7 +23,7 @@ export default function Home({newsResults:{articles}}) {
       <Feed />
 
       {/* Widgets component */}
-<Widgets newsResults={articles} articleNum={articleNum} setArticleNum={setArticleNum}/>
+<Widgets newsResults={articles} articleNum={articleNum} setArticleNum={setArticleNum} followResult={followResult?.results}/>
       {/* Modal component */}
     </main>
     </div>
@@ -39,10 +39,18 @@ export async function getServerSideProps(){
   const newsResults = await data.json();
 
   // console.log(newsResults);
+  // fetching randomusers
+  const followData = await fetch('https://randomuser.me/api/?results=50&inc=name,login,picture')
+  const followResult = await followData.json()
+
+  // console.log(followResult);
+
+
 
   return {
     props:{
       newsResults,
+      followResult
     }
   }
   
