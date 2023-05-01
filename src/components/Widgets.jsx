@@ -23,7 +23,7 @@ export default function Widgets({ newsResults, articleNum, setArticleNum }) {
       <div className="space-y-3 text-gray-700 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[75%]">
         <h4 className="px-4 text-lg font-bold ">What's Happening</h4>
         {newsResults.slice(0, articleNum).map((news) => (
-          <News key={news.source?.id} {...news} />
+          <News key={news.title} {...news} />
         ))}
         <button
           onClick={handleNewsResultsNum}
