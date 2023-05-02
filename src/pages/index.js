@@ -6,8 +6,8 @@ import { useState } from "react";
 
 
 
-export default function Home({newsResults:{articles},followResult}) {
-  const [articleNum,setArticleNum] =useState(3);
+export default function Home() {
+  // const [articleNum,setArticleNum] =useState(3);
   return (
     <div>
 
@@ -23,7 +23,7 @@ export default function Home({newsResults:{articles},followResult}) {
       <Feed />
 
       {/* Widgets component */}
-<Widgets newsResults={articles} articleNum={articleNum} setArticleNum={setArticleNum} followResult={followResult?.results}/>
+{/* <Widgets  followResult={followResult?.results}/> */}
       {/* Modal component */}
     </main>
     </div>
@@ -32,26 +32,26 @@ export default function Home({newsResults:{articles},followResult}) {
 
 
 
-export async function getServerSideProps(){
-  const top_headlines_api = "top-headlines/category/business/us.json"
-  const BASE_URL = "https://saurav.tech/NewsAPI/"
-  const data = await fetch(`${BASE_URL}${top_headlines_api}`)
-  const newsResults = await data.json();
+// export async function getServerSideProps(){
+//   const top_headlines_api = "top-headlines/category/business/us.json"
+//   const BASE_URL = "https://saurav.tech/NewsAPI/"
+//   // const data = await fetch(`${BASE_URL}${top_headlines_api}`)
+//   // const newsResults = await data.json();
 
-  // console.log(newsResults);
-  // fetching randomusers
-  const followData = await fetch('https://randomuser.me/api/?results=50&inc=name,login,picture')
-  const followResult = await followData.json()
+//   // console.log(newsResults);
+//   // fetching randomusers
+//   const followData = await fetch('https://randomuser.me/api/?results=50&inc=name,login,picture')
+//   const followResult = await followData.json()
 
-  // console.log(followResult);
+//   // console.log(followResult);
 
 
 
-  return {
-    props:{
-      newsResults,
-      followResult
-    }
-  }
+//   return {
+//     props:{
+//       // newsResults,
+//       followResult
+//     }
+//   }
   
-}
+// }
