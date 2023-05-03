@@ -1,9 +1,5 @@
 import { useSession, signOut } from "next-auth/react";
-import {
-  CameraIcon,
-  FaceSmileIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/outline";
+import { CameraIcon, FaceSmileIcon } from "@heroicons/react/24/outline";
 import { useRef, useState } from "react";
 import {
   addDoc,
@@ -83,7 +79,7 @@ export default function Input() {
               <div className="relative">
                 <XMarkIcon
                   onClick={() => setSelectedFile(null)}
-                  className="absolute cursor-pointer shadow-md h-9 text-black bg-white p-0 rounded-full "
+                  className="absolute border border-white cursor-pointer  h-9 text-black bg-white p-0 rounded-full "
                 />
                 <img
                   src={selectedFile}
@@ -120,6 +116,6 @@ export default function Input() {
           </div>
         </div>
       )}
-    </>
+    </> 
   );
 }
