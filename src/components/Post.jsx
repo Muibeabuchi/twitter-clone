@@ -87,7 +87,9 @@ export default function Post({
     if (window.confirm("are you sure you want to delete this post?")) {
       try {
         await deleteDoc(postRef);
-        await deleteObject(ref(storage, `posts/${id}/image`));
+        if (post?.image) {
+          await deleteObject(ref(storage, `posts/${id}/image`));
+        }
       } catch (error) {
         console.log(error);
       }
