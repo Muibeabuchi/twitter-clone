@@ -2,6 +2,7 @@ import Sidebar from "@/components/Sidebar";
 import Feed from '@/components/Feed';
 import Head from "next/head";
 import Widgets from "@/components/Widgets";
+import CommentsModal from "@/components/CommentsModal";
 import { useState } from "react";
 
 
@@ -25,6 +26,7 @@ export default function Home() {
       {/* Widgets component */}
 {/* <Widgets  followResult={followResult?.results}/> */}
       {/* Modal component */}
+      <CommentsModal />
     </main>
     </div>
   )
