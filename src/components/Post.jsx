@@ -16,8 +16,9 @@ import {
   onSnapshot,
   setDoc,
 } from "firebase/firestore";
-import { db } from "@/firebaseconfig";
+import { db, storage } from "@/firebaseconfig";
 import { useEffect, useState } from "react";
+import { deleteObject, ref } from "firebase/storage";
 
 export default function Post({
   // id,
@@ -81,6 +82,18 @@ export default function Post({
     }
   }, [likes]);
 
+  async function deletePost() {
+    const postRef = doc(db, "posts", id);
+    if (window.confirm("are you sure you want to delete this post?")) {
+      try {
+        await deleteDoc(postRef);
+        await deleteObject(ref(storage, `posts/${id}/image`));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
   // console.log(hasLiked);
 
   return (
@@ -124,7 +137,12 @@ export default function Post({
           {/* icons */}
           <div className="flex items-center justify-between p-2 text-gray-500">
             <ChatBubbleOvalLeftEllipsisIcon className="p-2  h-9 w-9 hoverEffect hover:text-sky-500 hover:bg-sky-100" />
-            <TrashIcon className="p-2 h-9 w-9 hoverEffect hover:text-red-600 hover:bg-red-100" />
+            {session?.user?.uid === post?.id && (
+              <TrashIcon
+                onClick={deletePost}
+                className="p-2 h-9 w-9 hoverEffect hover:text-red-600 hover:bg-red-100"
+              />
+            )}
             <div className="flex space-x-1 items-center">
               {hasLiked ? (
                 <SolidHeartIcon
