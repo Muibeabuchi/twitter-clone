@@ -14,7 +14,7 @@ export default function Feed() {
     const unsub = onSnapshot(q, (querySnapshot) => {
       const posts = [];
       querySnapshot.forEach((doc) => {
-        posts.push(doc.data());
+        posts.push({ id: doc.id, post: doc.data() });
       });
       console.log(posts);
       setPosts(posts);
@@ -26,7 +26,7 @@ export default function Feed() {
   if (!posts) {
     return <p>LOADING....</p>;
   }
-  const POSTS = posts.map((post, index) => <Post key={index} {...post} />);
+  const POSTS = posts.map((item, index) => <Post key={index} {...item} />);
   return (
     <div className="xl:ml-[370px] border-l border-r  border-gray-200 xl:min-w-[576px] sm:ml-[73px] flex-grow max-w-xl  ">
       <div className="sticky top-0 z-50 flex items-center justify-between px-3 py-2 bg-white border-b ">
