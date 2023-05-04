@@ -4,6 +4,7 @@ import Post from "./Post";
 import { db } from "@/firebaseconfig";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Feed() {
   const [posts, setPosts] = useState([]);
@@ -26,7 +27,17 @@ export default function Feed() {
   if (!posts) {
     return <p>LOADING....</p>;
   }
-  const POSTS = posts.map((item, index) => <Post key={index} {...item} />);
+  const POSTS = posts.map((item) => (
+    <motion.div
+      key={item?.id}
+      initial={{ opacity: 0, y: "-100px" }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, x: "-100px" }}
+      transition={{ duration: 1 }}
+    >
+      <Post key={item.id} {...item} />
+    </motion.div>
+  ));
   return (
     <div className="xl:ml-[370px] border-l border-r  border-gray-200 xl:min-w-[576px] sm:ml-[73px] flex-grow max-w-xl  ">
       <div className="sticky top-0 z-50 flex items-center justify-between px-3 py-2 bg-white border-b ">
@@ -36,7 +47,7 @@ export default function Feed() {
         </div>
       </div>
       <Input />
-      {POSTS}
+      <AnimatePresence>{POSTS}</AnimatePresence>
     </div>
   );
 }
