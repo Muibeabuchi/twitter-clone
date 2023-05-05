@@ -6,11 +6,18 @@ import {
   FaceSmileIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { doc, onSnapshot } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "@/firebaseconfig";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Moment from "react-moment";
+import { useRouter } from "next/router";
 
 export default function CommentModal() {
   const [open, setOpen] = useRecoilState(modalAtom);
@@ -18,11 +25,25 @@ export default function CommentModal() {
   const [post, setPost] = useState({});
   const { data: session } = useSession();
   const [input, setInput] = useState("");
+  const router = useRouter();
 
   console.log(post);
 
-  function sendComment() {
-    console.log("comment has been sent");
+  async function sendComment() {
+    if (input) {
+      const commentRef = collection(db, "posts", postId, "comments");
+      await addDoc(commentRef, {
+        comment: input,
+        name: session?.user?.name,
+        username: session?.user?.username,
+        userImg: session?.user.image,
+        timestamp: serverTimestamp(),
+      });
+      setOpen(false);
+      setInput("");
+      router.push(`post/${postId}`);
+    }
+    // console.log("comment has been sent");
   }
 
   // console.log(postId);
@@ -37,6 +58,7 @@ export default function CommentModal() {
     });
     return () => unsub();
   }, [postId]);
+
   return (
     <div>
       {open && (

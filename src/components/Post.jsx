@@ -36,6 +36,7 @@ export default function Post({
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
+  const [comments, setComments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useRecoilState(modalAtom);
   const [postId, setPostId] = useRecoilState(postIdAtom);
 
@@ -95,6 +96,20 @@ export default function Post({
     }
   }, [likes]);
 
+  useEffect(() => {
+    const commentsRef = collection(db, "posts", id, "comments");
+    const unsub = onSnapshot(commentsRef, (snapShot) => {
+      const comments = snapShot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setComments(comments);
+      // console.log(snapShot?.docs);
+    });
+
+    return () => unsub();
+  }, [db, id]);
+
   async function deletePost() {
     const postRef = doc(db, "posts", id);
     if (window.confirm("are you sure you want to delete this post?")) {
@@ -151,10 +166,13 @@ export default function Post({
           )}
           {/* icons */}
           <div className="flex items-center justify-between p-2 text-gray-500">
-            <ChatBubbleOvalLeftEllipsisIcon
-              onClick={handleOpenModal}
-              className="p-2  h-9 w-9 hoverEffect hover:text-sky-500 hover:bg-sky-100"
-            />
+            <div className="flex items-center">
+              <ChatBubbleOvalLeftEllipsisIcon
+                onClick={handleOpenModal}
+                className="p-2  h-9 w-9 hoverEffect hover:text-sky-500 hover:bg-sky-100"
+              />
+              <span>{comments?.length}</span>
+            </div>
             {session?.user?.uid === post?.id && (
               <TrashIcon
                 onClick={deletePost}
