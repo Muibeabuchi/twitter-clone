@@ -20,7 +20,7 @@ import { db, storage } from "@/firebaseconfig";
 import { useEffect, useState } from "react";
 import { deleteObject, ref } from "firebase/storage";
 import { useRecoilState } from "recoil";
-import { modalAtom } from "@/atom/ModalAtom";
+import { modalAtom, postIdAtom } from "@/atom/ModalAtom";
 
 export default function Post({
   // id,
@@ -37,6 +37,16 @@ export default function Post({
   const [likes, setLikes] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useRecoilState(modalAtom);
+  const [postId, setPostId] = useRecoilState(postIdAtom);
+
+  function handleOpenModal() {
+    if (!session) {
+      signIn();
+    } else {
+      setPostId(id);
+      setIsModalOpen(!isModalOpen);
+    }
+  }
 
   async function likePost() {
     if (!session) {
@@ -115,7 +125,7 @@ export default function Post({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 whitespace-nowrap">
               <h4 className="font-bold text-[15px] sm:text-[16px] hover:underline">
-                {post?.name}
+                {post?.user}
               </h4>
               <span className="sm:text-[15px] text-sm">
                 @{post?.username} -{" "}
@@ -142,7 +152,7 @@ export default function Post({
           {/* icons */}
           <div className="flex items-center justify-between p-2 text-gray-500">
             <ChatBubbleOvalLeftEllipsisIcon
-              onClick={() => setIsModalOpen(!isModalOpen)}
+              onClick={handleOpenModal}
               className="p-2  h-9 w-9 hoverEffect hover:text-sky-500 hover:bg-sky-100"
             />
             {session?.user?.uid === post?.id && (
