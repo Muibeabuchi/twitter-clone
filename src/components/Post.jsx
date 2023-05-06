@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { deleteObject, ref } from "firebase/storage";
 import { useRecoilState } from "recoil";
 import { modalAtom, postIdAtom } from "@/atom/ModalAtom";
+import { useRouter } from "next/router";
 
 export default function Post({
   // id,
@@ -39,6 +40,7 @@ export default function Post({
   const [comments, setComments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useRecoilState(modalAtom);
   const [postId, setPostId] = useRecoilState(postIdAtom);
+  const router = useRouter();
 
   function handleOpenModal() {
     if (!session) {
@@ -59,24 +61,28 @@ export default function Post({
       await setDoc(doc(db, "posts", id, "likes", session?.user.uid), {
         username: session.user.username,
       });
+      router.push("/");
     }
   }
 
   useEffect(() => {
-    const unsub = onSnapshot(
-      collection(db, "posts", id, "likes"),
-      (querySnapshot) => {
-        // console.log(querySnapshot.docs.data());
-        // setLikes([querySnapshot.data()]);
-        setLikes(
-          querySnapshot?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }))
-        );
-      }
-    );
+    try {
+      const unsub = onSnapshot(
+        collection(db, "posts", id, "likes"),
+        (querySnapshot) => {
+          // console.log(querySnapshot.docs.data());
+          // setLikes([querySnapshot.data()]);
+          setLikes(
+            querySnapshot?.docs?.map((doc) => ({ ...doc.data(), id: doc.id }))
+          );
+        }
+      );
+      return () => unsub();
+    } catch (error) {
+      console.log(error.message);
+    }
     // console.log(likes);
-
-    return () => unsub();
-  }, [session?.user?.uid, id, db]);
+  }, [id, db]);
 
   useEffect(() => {
     if (likes && likes.length > 0) {
@@ -97,17 +103,20 @@ export default function Post({
   }, [likes]);
 
   useEffect(() => {
-    const commentsRef = collection(db, "posts", id, "comments");
-    const unsub = onSnapshot(commentsRef, (snapShot) => {
-      const comments = snapShot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setComments(comments);
-      // console.log(snapShot?.docs);
-    });
-
-    return () => unsub();
+    try {
+      const commentsRef = collection(db, "posts", id, "comments");
+      const unsub = onSnapshot(commentsRef, (snapShot) => {
+        const comments = snapShot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setComments(comments);
+        // console.log(snapShot?.docs);
+        return () => unsub();
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   }, [db, id]);
 
   async function deletePost() {

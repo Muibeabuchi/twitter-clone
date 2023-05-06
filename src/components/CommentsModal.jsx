@@ -41,7 +41,7 @@ export default function CommentModal() {
       });
       setOpen(false);
       setInput("");
-      router.push(`post/${postId}`);
+      router.push(`/posts/${postId}`);
     }
     // console.log("comment has been sent");
   }
