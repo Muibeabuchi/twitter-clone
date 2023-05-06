@@ -162,12 +162,13 @@ export default function Post({
             <EllipsisHorizontalIcon className="w-10 h-10 hoverEffect hover:bg-sky-100 hover:text-sky-500 xl:ml-8 xl:inline" />
           </div>
           {/* post-text */}
-          <p className="text-gray-800 text-[15px] sm:text-base mb-2 ">
+          <p onClick={()=>router.push(`/posts/${id}`)} className="text-gray-800 text-[15px] sm:text-base mb-2 ">
             {post?.text}
           </p>
           {/* post-image */}
           {post?.image && (
             <img
+            onClick={()=>router.push(`/posts/${id}`)}
               src={post?.image}
               alt="post-image"
               className="mr-2 rounded-2xl"
