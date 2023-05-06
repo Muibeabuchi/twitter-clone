@@ -15,6 +15,7 @@ export const authOptions = {
   pages:{
     signIn:'/auth/sign-in',
   },
+  secret:process.env.NEXTAUTH_SECRET,
   callbacks:{
     async session({session,token}){
       session.user.username = session.user.name.split(" ").join("").toLocaleLowerCase();
