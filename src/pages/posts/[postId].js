@@ -10,6 +10,7 @@ import Post from "@/components/Post";
 import { collection, doc, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebaseconfig";
 import Comment from "@/components/Comment";
+import { AnimatePresence,motion } from "framer-motion";
 
 
 
@@ -75,11 +76,24 @@ console.log(error.message);
       {
         comments.length > 0 &&(
           <div>
+            <AnimatePresence >
+
             {
               comments.map((comment)=>(
+                <motion.div
+                key={item?.id}
+                initial={{ opacity: 0, y: "-100px" }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: "-100px" }}
+                transition={{ duration: 1 }}
+              >
+
+          
                 <Comment key={comment.id} originalPostId={postId} comment={comment}/>
-              ))
-            }
+              </motion.div>
+                ))
+              }
+              </AnimatePresence>
           </div>
         )
       }
