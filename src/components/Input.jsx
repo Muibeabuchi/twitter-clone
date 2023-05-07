@@ -61,7 +61,7 @@ export default function Input() {
       {session && (
         <div className="flex p-3 space-x-3 border-b border-gray-200">
           <img
-            onClick={signOut}
+          
             src={session.user.image}
             className="rounded-full cursor-pointer h-11 w-11 hover:brightness-95"
           />
